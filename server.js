@@ -4,6 +4,7 @@ import multer from 'multer';
 import fs from 'fs';
 import path from 'path';  // Importar path
 import { Octokit } from '@octokit/rest';
+import https from 'https'; // Para manejar la verificación de certificados SSL
 
 // Crear la aplicación Express
 const app = express();
@@ -22,10 +23,20 @@ app.post('/upload-xml', upload.single('file'), async (req, res) => {
         const fileName = req.file.originalname;
         const content = fs.readFileSync(filePath, 'utf8');
 
-        const octokit = new Octokit({ auth: 'ghp_123456789ABCDEFGHIJ' });
+        // Usar el token desde la variable de entorno
+        const octokit = new Octokit({
+            auth: process.env.GITHUB_TOKEN,  // Obtiene el token desde la variable de entorno
+            request: {
+                agent: new https.Agent({
+                    rejectUnauthorized: false  // Ignorar SSL autofirmado
+                })
+            }
+        });
+
         const owner = 'cfc-pretorian';
         const repo = 'mi-proyecto-xml';
 
+        // Subir el archivo a GitHub
         const response = await octokit.repos.createOrUpdateFileContents({
             owner,
             repo,
