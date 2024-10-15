@@ -18,11 +18,42 @@ app.use(express.static(path.resolve()));
 // Configura Multer para manejar la subida de archivos
 const upload = multer({ dest: 'uploads/' });
 
+// Función para generar un nuevo nombre si el archivo ya existe
+async function generateNewFileName(octokit, owner, repo, originalFileName, directory) {
+    let fileExists = true;
+    let counter = 1;
+    let newFileName = originalFileName;
+    const [baseName, extension] = originalFileName.split('.');
+
+    // Repetir mientras el archivo exista
+    while (fileExists) {
+        try {
+            // Verificar si el archivo existe en el repositorio
+            await octokit.repos.getContent({
+                owner,
+                repo,
+                path: `${directory}/${newFileName}`
+            });
+            // Si existe, agregar un número al nombre
+            newFileName = `${baseName}_${counter}.${extension}`;
+            counter++;
+        } catch (error) {
+            // Si el archivo no existe (error 404), salir del bucle
+            if (error.status === 404) {
+                fileExists = false;
+            } else {
+                throw error;  // Si es otro error, lo lanzamos
+            }
+        }
+    }
+    return newFileName;
+}
+
 // Rutas para manejar la subida de archivos
 app.post('/upload-xml', upload.single('file'), async (req, res) => {
     try {
         const filePath = req.file.path;
-        const fileName = req.file.originalname;
+        let fileName = req.file.originalname;
         const content = fs.readFileSync(filePath, 'utf8');
 
         // Usar el token desde la variable de entorno
@@ -37,12 +68,16 @@ app.post('/upload-xml', upload.single('file'), async (req, res) => {
 
         const owner = 'cfc-pretorian';
         const repo = 'mi-proyecto-xml';
+        const directory = 'archivos_xml';
+
+        // Generar un nuevo nombre si el archivo ya existe
+        fileName = await generateNewFileName(octokit, owner, repo, fileName, directory);
 
         // Subir el archivo a GitHub
         const response = await octokit.repos.createOrUpdateFileContents({
             owner,
             repo,
-            path: `archivos_xml/${fileName}`,
+            path: `${directory}/${fileName}`,
             message: `Subir archivo XML: ${fileName}`,
             content: Buffer.from(content).toString('base64'),
             committer: {
@@ -57,7 +92,7 @@ app.post('/upload-xml', upload.single('file'), async (req, res) => {
 
         // Manejo de éxito
         console.log('Respuesta de GitHub:', response);
-        res.json({ success: true, message: 'Archivo XML subido a GitHub.' });
+        res.json({ success: true, message: `Archivo XML subido a GitHub como ${fileName}.` });
     } catch (error) {
         // Manejo de error más detallado
         if (error.response && error.response.data) {
@@ -68,7 +103,7 @@ app.post('/upload-xml', upload.single('file'), async (req, res) => {
         }
         res.status(500).json({ success: false, message: 'Error al subir el archivo a GitHub.' });
     } finally {
-        fs.unlinkSync(req.file.path);
+        fs.unlinkSync(req.file.path);  // Eliminar el archivo temporal después de subirlo
     }
 });
 
