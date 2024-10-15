@@ -1,3 +1,5 @@
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 // Cambia require por import
 import express from 'express';
 import multer from 'multer';
@@ -53,9 +55,17 @@ app.post('/upload-xml', upload.single('file'), async (req, res) => {
             }
         });
 
+        // Manejo de éxito
+        console.log('Respuesta de GitHub:', response);
         res.json({ success: true, message: 'Archivo XML subido a GitHub.' });
     } catch (error) {
-        console.error('Error al subir el archivo a GitHub:', error);
+        // Manejo de error más detallado
+        if (error.response && error.response.data) {
+            console.error('Error al subir el archivo a GitHub:', error.response.data.message);
+            console.error('Documentación de GitHub:', error.response.data.documentation_url);
+        } else {
+            console.error('Error inesperado:', error);
+        }
         res.status(500).json({ success: false, message: 'Error al subir el archivo a GitHub.' });
     } finally {
         fs.unlinkSync(req.file.path);
