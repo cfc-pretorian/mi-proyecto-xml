@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertir TXT a XML</title>
+</head>
+<body>
+    <h1>Convertir archivo TXT a XML</h1>
+    
+    <form id="uploadForm">
+        <input type="file" id="txtFile" accept=".txt" required>
+        <button type="submit">Convertir a XML</button>
+    </form>
+
+    <h2>Resultado XML:</h2>
+    <textarea id="xmlOutput" rows="10" cols="50" readonly></textarea>
+
+    <button id="saveXml">Guardar XML y subir a GitHub</button>
+
+
+    <script>
+        // Maneja la conversión de TXT a XML
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const fileInput = document.getElementById('txtFile');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert("Por favor, selecciona un archivo TXT.");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                const xmlContent = txtToXml(content);
+                document.getElementById('xmlOutput').value = xmlContent;
+            };
+            reader.readAsText(file);
+        });
+
+        // Función para convertir TXT a XML
+        function txtToXml(txtContent) {
+            let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<root>\n';
+            const lines = txtContent.split('\n');
+            lines.forEach((line, index) => {
+                xmlContent += `  <line id="${index + 1}">${line.trim()}</line>\n`;
+            });
+            xmlContent += '</root>';
+            return xmlContent;
+        }
+
+        // Maneja el envío del archivo XML al servidor
+        document.getElementById('saveXml').addEventListener('click', function() {
+            const xmlContent = document.getElementById('xmlOutput').value;
+            if (!xmlContent) {
+                alert("Primero convierte un archivo TXT a XML.");
+                return;
+            }
+
+            const blob = new Blob([xmlContent], { type: 'text/xml' });
+            const formData = new FormData();
+            formData.append('file', blob, 'archivo.xml');  // Aquí se prepara el archivo XML para enviarlo al servidor
+
+            // Enviar el archivo XML al servidor en http://localhost:3000/upload-xml
+            fetch('http://localhost:3000/upload-xml', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Archivo XML subido exitosamente a GitHub.');
+                } else {
+                    alert('Error al subir el archivo a GitHub.');
+                }
+            })
+            .catch(error => {
+                console.error('Error al subir el archivo:', error);
+                alert('Hubo un problema al intentar subir el archivo.');
+            });
+        });
+    </script>
+</body>
+</html>
