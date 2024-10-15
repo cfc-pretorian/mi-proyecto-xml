@@ -24,7 +24,7 @@ app.post('/upload-xml', upload.single('file'), async (req, res) => {
 
         const octokit = new Octokit({ auth: 'ghp_123456789ABCDEFGHIJ' });
         const owner = 'cfc-pretorian';
-        const repo = 'Inyeccion-IOC-2';
+        const repo = 'mi-proyecto-xml';
 
         const response = await octokit.repos.createOrUpdateFileContents({
             owner,
