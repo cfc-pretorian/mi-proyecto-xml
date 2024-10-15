@@ -1,36 +1,37 @@
-// Desactivar validación de certificado autofirmado (solo para desarrollo)
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
+// Cambia require por import
 import express from 'express';
 import multer from 'multer';
 import fs from 'fs';
+import path from 'path';  // Importar path
 import { Octokit } from '@octokit/rest';
 
+// Crear la aplicación Express
 const app = express();
 const port = 3000;
+
+// Servir archivos estáticos (como index.html) desde el directorio actual
+app.use(express.static(path.resolve()));
 
 // Configura Multer para manejar la subida de archivos
 const upload = multer({ dest: 'uploads/' });
 
-// Configura el token de GitHub y el repositorio
-const octokit = new Octokit({ auth: 'ghp_123456789ABCDEFGHIJ' });  // Reemplaza con tu token real
-const owner = 'cfc-pretorian';  // Reemplaza con tu nombre de usuario si es diferente
-const repo = 'Inyeccion-IOC-2';  // Reemplaza con el nombre de tu repositorio
-
-// Ruta para manejar la subida de archivos
+// Rutas para manejar la subida de archivos
 app.post('/upload-xml', upload.single('file'), async (req, res) => {
     try {
-        const filePath = req.file.path;  // Ubicación temporal del archivo subido
+        const filePath = req.file.path;
         const fileName = req.file.originalname;
         const content = fs.readFileSync(filePath, 'utf8');
 
-        // Subir el archivo a GitHub
+        const octokit = new Octokit({ auth: 'ghp_123456789ABCDEFGHIJ' });
+        const owner = 'cfc-pretorian';
+        const repo = 'Inyeccion-IOC-2';
+
         const response = await octokit.repos.createOrUpdateFileContents({
             owner,
             repo,
-            path: `archivos_xml/${fileName}`,  // Carpeta dentro del repo
+            path: `archivos_xml/${fileName}`,
             message: `Subir archivo XML: ${fileName}`,
-            content: Buffer.from(content).toString('base64'),  // Convertir a base64
+            content: Buffer.from(content).toString('base64'),
             committer: {
                 name: 'GitHub Actions',
                 email: 'action@github.com'
@@ -46,7 +47,7 @@ app.post('/upload-xml', upload.single('file'), async (req, res) => {
         console.error('Error al subir el archivo a GitHub:', error);
         res.status(500).json({ success: false, message: 'Error al subir el archivo a GitHub.' });
     } finally {
-        fs.unlinkSync(req.file.path);  // Borrar el archivo temporal después de subirlo
+        fs.unlinkSync(req.file.path);
     }
 });
 
