@@ -35,14 +35,18 @@ async function generateNewFileName(octokit, owner, repo, originalFileName, direc
                 path: `${directory}/${newFileName}`
             });
             // Si existe, agregar un número al nombre
+            console.log(`El archivo ${newFileName} ya existe, generando un nuevo nombre...`);
             newFileName = `${baseName}_${counter}.${extension}`;
             counter++;
         } catch (error) {
-            // Si el archivo no existe (error 404), salir del bucle
             if (error.status === 404) {
+                // Si el archivo no existe, este es un comportamiento esperado
                 fileExists = false;
+                console.log(`El archivo ${newFileName} no existe, será creado.`);
             } else {
-                throw error;  // Si es otro error, lo lanzamos
+                // Si es otro tipo de error, lanzarlo
+                console.error('Error inesperado al verificar el archivo:', error.message);
+                throw error;
             }
         }
     }
@@ -91,7 +95,7 @@ app.post('/upload-xml', upload.single('file'), async (req, res) => {
         });
 
         // Manejo de éxito
-        console.log('Respuesta de GitHub:', response);
+        console.log('Archivo subido exitosamente:', response.data.content.html_url);
         res.json({ success: true, message: `Archivo XML subido a GitHub como ${fileName}.` });
     } catch (error) {
         // Manejo de error más detallado
@@ -103,7 +107,12 @@ app.post('/upload-xml', upload.single('file'), async (req, res) => {
         }
         res.status(500).json({ success: false, message: 'Error al subir el archivo a GitHub.' });
     } finally {
-        fs.unlinkSync(req.file.path);  // Eliminar el archivo temporal después de subirlo
+        try {
+            fs.unlinkSync(req.file.path);  // Eliminar el archivo temporal después de subirlo
+            console.log(`Archivo temporal ${req.file.path} eliminado.`);
+        } catch (err) {
+            console.error('Error al eliminar el archivo temporal:', err);
+        }
     }
 });
 
