@@ -4,30 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Convertir TXT a XML</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            padding: 20px;
+            background-color: #4CAF50;
+            color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        textarea {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        #message {
+            padding: 10px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+        #message.success {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #message.error {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
 </head>
 <body>
     <h1>Convertir archivo TXT a XML</h1>
-    
-    <form id="uploadForm">
-        <input type="file" id="txtFile" accept=".txt" required>
-        <button type="submit">Convertir a XML</button>
-    </form>
 
-    <h2>Resultado XML:</h2>
-    <textarea id="xmlOutput" rows="10" cols="50" readonly></textarea>
+    <div class="container">
+        <form id="uploadForm">
+            <input type="file" id="txtFile" accept=".txt" required>
+            <button type="submit">Convertir a XML</button>
+        </form>
 
-    <button id="saveXml">Guardar XML y subir a GitHub</button>
+        <h2>Resultado XML:</h2>
+        <textarea id="xmlOutput" rows="10" readonly></textarea>
 
+        <button id="saveXml">Guardar XML y subir a GitHub</button>
+
+        <div id="message"></div> <!-- Mensaje de éxito o error -->
+    </div>
 
     <script>
-        // Maneja la conversión de TXT a XML
+        // Maneja la conversión de TXT a XML con estructura TIEReputations
         document.getElementById('uploadForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const fileInput = document.getElementById('txtFile');
             const file = fileInput.files[0];
 
             if (!file) {
-                alert("Por favor, selecciona un archivo TXT.");
+                showMessage('Por favor, selecciona un archivo TXT.', 'error');
                 return;
             }
 
@@ -40,14 +104,19 @@
             reader.readAsText(file);
         });
 
-        // Función para convertir TXT a XML
+        // Función para convertir TXT a XML con la estructura deseada
         function txtToXml(txtContent) {
-            let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<root>\n';
+            let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<TIEReputations>\n';
             const lines = txtContent.split('\n');
             lines.forEach((line, index) => {
-                xmlContent += `  <line id="${index + 1}">${line.trim()}</line>\n`;
+                xmlContent += `  <FileReputation>\n`;
+                const values = line.split(',');
+                xmlContent += `    <MD5Hash>${values[0] || 'undefined'}</MD5Hash>\n`;
+                xmlContent += `    <SHA256Hash>${values[1] || 'undefined'}</SHA256Hash>\n`;
+                xmlContent += `    <ReputationLevel>1</ReputationLevel>\n`; // Puedes ajustar el valor de ReputationLevel según necesites
+                xmlContent += `  </FileReputation>\n`;
             });
-            xmlContent += '</root>';
+            xmlContent += '</TIEReputations>';
             return xmlContent;
         }
 
@@ -55,7 +124,7 @@
         document.getElementById('saveXml').addEventListener('click', function() {
             const xmlContent = document.getElementById('xmlOutput').value;
             if (!xmlContent) {
-                alert("Primero convierte un archivo TXT a XML.");
+                showMessage('Primero convierte un archivo TXT a XML.', 'error');
                 return;
             }
 
@@ -71,16 +140,29 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Archivo XML subido exitosamente a GitHub.');
+                    showMessage('Archivo XML subido exitosamente a GitHub.', 'success');
                 } else {
-                    alert('Error al subir el archivo a GitHub.');
+                    showMessage('Error al subir el archivo a GitHub.', 'error');
                 }
             })
             .catch(error => {
                 console.error('Error al subir el archivo:', error);
-                alert('Hubo un problema al intentar subir el archivo.');
+                showMessage('Hubo un problema al intentar subir el archivo.', 'error');
             });
         });
+
+        // Función para mostrar mensajes de éxito o error
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.className = type;
+            messageDiv.style.display = 'block';
+
+            // Ocultar el mensaje después de 5 segundos
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
     </script>
 </body>
 </html>
