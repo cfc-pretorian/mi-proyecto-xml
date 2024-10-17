@@ -132,15 +132,15 @@
             const formData = new FormData();
             formData.append('file', blob, 'archivo.xml');  // Aquí se prepara el archivo XML para enviarlo al servidor
 
-            // Enviar el archivo XML al servidor en http://localhost:3000/upload-xml
-            fetch('http://localhost:3000/upload-xml', {
+            // Enviar el archivo XML al servidor (Glitch) en tu ruta correcta
+            fetch('https://mi-proyecto-xml.glitch.me/upload-xml', {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showMessage('Archivo XML subido exitosamente a GitHub.', 'success');
+                    showMessage(`Archivo XML subido exitosamente a GitHub.`, 'success');
                 } else {
                     showMessage('Error al subir el archivo a GitHub.', 'error');
                 }
