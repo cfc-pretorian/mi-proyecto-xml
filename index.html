@@ -113,7 +113,7 @@
                 const values = line.split(',');
                 xmlContent += `    <MD5Hash>${values[0] || 'undefined'}</MD5Hash>\n`;
                 xmlContent += `    <SHA256Hash>${values[1] || 'undefined'}</SHA256Hash>\n`;
-                xmlContent += `    <ReputationLevel>1</ReputationLevel>\n`; // Puedes ajustar el valor de ReputationLevel según necesites
+                xmlContent += `    <ReputationLevel>1</ReputationLevel>\n`;
                 xmlContent += `  </FileReputation>\n`;
             });
             xmlContent += '</TIEReputations>';
@@ -130,7 +130,7 @@
 
             const blob = new Blob([xmlContent], { type: 'text/xml' });
             const formData = new FormData();
-            formData.append('file', blob, 'archivo.xml');  // Aquí se prepara el archivo XML para enviarlo al servidor
+            formData.append('file', blob, 'archivo.xml');
 
             // Enviar el archivo XML al servidor (Glitch) en tu ruta correcta
             fetch('https://mi-proyecto-xml.glitch.me/upload-xml', {
@@ -140,9 +140,9 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showMessage(`Archivo XML subido exitosamente a GitHub.`, 'success');
+                    showMessage('El archivo XML fue subido o actualizado exitosamente.', 'success');  // Mensaje genérico
                 } else {
-                    showMessage('Error al subir el archivo a GitHub.', 'error');
+                    showMessage('Error al subir o actualizar el archivo en GitHub.', 'error');
                 }
             })
             .catch(error => {
