@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TIEReputations>
   <FileReputation>
-    <SHA256Hash>01e8c52df1c70cc30a8b6fd42c385b292bcb0ee5d3cc7c5b86371827d31a12e2</SHA256Hash>
+    <SHA1Hash>bf7cbb2ac60406fe0c339fb89a6d610b61f7e6b2</SHA1Hash>
     <ReputationLevel>1</ReputationLevel>
   </FileReputation>
   <FileReputation>
-    <SHA256Hash>01e3c4e657ab9990d03eabcb3fe1fee29fe6d00611e2c0c51d632f6043a2d6ab</SHA256Hash>
+    <SHA1Hash>33155ce05f51507912b032e608dd68bef8897723</SHA1Hash>
     <ReputationLevel>1</ReputationLevel>
   </FileReputation>
 </TIEReputations>
