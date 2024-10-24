@@ -1,9 +1,11 @@
-name: Deploy to Google Cloud Run
+name: Deploy to Google Cloud Run on XML update
 
 on:
   push:
     branches:
-      - master  # Se ejecutará cada vez que haya un push en la rama principal
+      - master  # Se ejecuta solo en la rama master
+    paths:
+      - '**/*.xml'  # Solo se ejecuta cuando se actualiza un archivo XML en el repositorio
 
 jobs:
   deploy:
