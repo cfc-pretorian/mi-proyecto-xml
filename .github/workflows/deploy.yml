@@ -1,0 +1,33 @@
+name: Deploy to Google Cloud Run
+
+on:
+  push:
+    branches:
+      - master  # Se ejecutará cada vez que haya un push en la rama principal
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        export_default_credentials: true
+
+    - name: Build and push Docker image to Google Artifact Registry
+      run: |
+        docker build -t southamerica-east1-docker.pkg.dev/$GCP_PROJECT_ID/docker-repo/bot-actualizado .
+        docker push southamerica-east1-docker.pkg.dev/$GCP_PROJECT_ID/docker-repo/bot-actualizado
+
+    - name: Deploy to Cloud Run
+      run: |
+        gcloud run deploy bot-actualizado \
+          --image=southamerica-east1-docker.pkg.dev/$GCP_PROJECT_ID/docker-repo/bot-actualizado \
+          --region=southamerica-east1 \
+          --allow-unauthenticated
