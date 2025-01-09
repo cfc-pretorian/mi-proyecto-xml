@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TIEReputations>
   <FileReputation>
-    <VHash><?xml version='1.0' encoding='UTF-8'?><Error><Code>ExpiredToken</Code><Message>Invalid argument.</Message><Details>The provided token has expired. Request signature expired at: 2025-01-09T16:46:19+00:00</Details></Error></VHash>
+    <MD5Hash>0cd57e68236aaa585af75e3be9d5df7d</MD5Hash>
+    <ReputationLevel>1</ReputationLevel>
+  </FileReputation>
+  <FileReputation>
+    <MD5Hash>407dcc63e6186f7acada055169b08d81</MD5Hash>
+    <ReputationLevel>1</ReputationLevel>
+  </FileReputation>
+  <FileReputation>
+    <SHA1Hash>189c638388acd0189fe164cf81e455e41d9629d6</SHA1Hash>
+    <ReputationLevel>1</ReputationLevel>
+  </FileReputation>
+  <FileReputation>
+    <SHA1Hash>e38082ae727aeaef4f241a1920150fdf6f149106</SHA1Hash>
+    <ReputationLevel>1</ReputationLevel>
+  </FileReputation>
+  <FileReputation>
+    <SHA256Hash>7f3c6e98b039213cb241f99f26e328647efa7a683cdee8dfd6f5d5db11161ae2</SHA256Hash>
+    <ReputationLevel>1</ReputationLevel>
+  </FileReputation>
+  <FileReputation>
+    <SHA256Hash>d3e052004dba62484477f5c2e7e8d77055dd067f916dd150d1199d45647b8d3e</SHA256Hash>
     <ReputationLevel>1</ReputationLevel>
   </FileReputation>
 </TIEReputations>
