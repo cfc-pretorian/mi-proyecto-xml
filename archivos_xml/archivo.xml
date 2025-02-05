@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TIEReputations>
   <FileReputation>
-    <SHA256Hash>1f32f454ba32de5e0b7ed429b3542cdb0a9f826f5f5146f206baf074ec1abfe0</SHA256Hash>
+    <SHA256Hash>c2b233d4397811d23bc48357374d11934203d06d3b5be79b3081207037f4d115</SHA256Hash>
+    <ReputationLevel>1</ReputationLevel>
+  </FileReputation>
+  <FileReputation>
+    <SHA256Hash>1b3513ef546a8d5c654f2fabe70649066b28f0643b7fe3ac08911da197cb9007</SHA256Hash>
+    <ReputationLevel>1</ReputationLevel>
+  </FileReputation>
+  <FileReputation>
+    <SHA256Hash>b76fddc1b37846725baa9f9b15286c46a7b364e4b94738a578a8b32a4dd5fa67</SHA256Hash>
     <ReputationLevel>1</ReputationLevel>
   </FileReputation>
 </TIEReputations>
