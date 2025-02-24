@@ -1,23 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<TIEReputations>
-  <FileReputation>
-    <SHA256Hash>d0c1662ce239e4d288048c0e3324ec52962f6ddda77da0cb7af9c1d9c2f1e2eb</SHA256Hash>
-    <ReputationLevel>1</ReputationLevel>
-  </FileReputation>
-  <FileReputation>
-    <SHA256Hash>26d5748ffe6bd95e3fee6ce184d388a1a681006dc23a0f08d53c083c593c193b</SHA256Hash>
-    <ReputationLevel>1</ReputationLevel>
-  </FileReputation>
-  <FileReputation>
-    <SHA1Hash>e6b34a589e61b155ab70f11f8f7393316c9a3189</SHA1Hash>
-    <ReputationLevel>1</ReputationLevel>
-  </FileReputation>
-  <FileReputation>
-    <SHA1Hash>ce4758849b53af582d2d8a1bc0db20683e139fcc</SHA1Hash>
-    <ReputationLevel>1</ReputationLevel>
-  </FileReputation>
-  <FileReputation>
-    <SHA1Hash>99ed6135defff6e675d626f742389d6280abdb60</SHA1Hash>
-    <ReputationLevel>1</ReputationLevel>
-  </FileReputation>
-</TIEReputations>
+f1dc41b0bdc85756ecba4ca4562981444051d35a9e415ee370665ec94328b475
+bf8739fd97ae08f481a400469d89069c74c5794cdfd6792ce186d51487427a65
+2e5fc35a9d523e2b9d79df4f6be295284e953c0171ea28e1b6e89098afca3313
+e4a9185f0986262e066fdd0a863444e2667b40655df1c7098c605be5bd3ec6e6
+c80d7678c090502eac5c846a65051b93ec62255112df9fef932ba7126759a159
+c179245ae55101fac88f6627b17b45ba531d179f5cb9c350e271fd59c510d8de
